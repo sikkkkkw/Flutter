@@ -46,7 +46,6 @@ class _TodoWidgetState extends State<TodoWidget> {
     return Card(
       child: ListTile(
           onTap: () {
-            print("ddd");
             widget.todo.copywith(!widget.todo.isDone);
             setState(() {});
           },
