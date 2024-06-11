@@ -1,4 +1,6 @@
+import 'package:app/bloc/todo_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CustomCalender extends StatefulWidget {
@@ -15,6 +17,7 @@ class _CustomCalenderState extends State<CustomCalender> {
   DateTime _isSelectedDay = DateTime.now();
   // 현재 보여지는 날짜
   DateTime _focusDay = DateTime.now();
+  final bloc = TodoBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +32,8 @@ class _CustomCalenderState extends State<CustomCalender> {
         return isSameDay(_isSelectedDay, day);
       },
       onDaySelected: (selectedDay, focusedDay) {
+        final formatDate = DateFormat('yyyy-MM-dd').format(selectedDay);
+        bloc.getTimeWithDate(formatDate);
         setState(() {
           _isSelectedDay = selectedDay;
           _focusDay = focusedDay;
