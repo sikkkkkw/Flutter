@@ -24,7 +24,7 @@ class Todo {
   final String date;
   final String status;
   final String? content;
-  final DateTime? createAt;
+  final DateTime? createdAt;
 
   Todo(
       {required this.id,
@@ -32,5 +32,5 @@ class Todo {
       required this.date,
       required this.status,
       this.content,
-      this.createAt});
+      this.createdAt});
 }

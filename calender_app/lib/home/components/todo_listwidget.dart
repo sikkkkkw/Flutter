@@ -1,6 +1,7 @@
 import 'package:app/bloc/todo_bloc.dart';
 import 'package:app/model/todo_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class TodoWidget extends StatelessWidget {
   final Todo todo;
@@ -12,13 +13,24 @@ class TodoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(todo.title),
-      subtitle: Text(todo.content ?? ''),
-      onTap: () {},
-      trailing: Icon(
-        Icons.check_circle_rounded,
-        color: setColor(todo.status),
+    final bloc = TodoBloc();
+
+    return Dismissible(
+      background: Container(
+        color: Colors.red,
+      ),
+      key: UniqueKey(),
+      onDismissed: (direction) {
+        bloc.removeTodo(todo);
+      },
+      child: ListTile(
+        title: Text(todo.title),
+        subtitle: Text(todo.content ?? ''),
+        onTap: () {},
+        trailing: Icon(
+          Icons.check_circle_rounded,
+          color: setColor(todo.status),
+        ),
       ),
     );
   }

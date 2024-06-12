@@ -2,8 +2,10 @@
 
 import 'dart:async';
 
-import 'package:app/common/dummy_data.dart';
+import 'package:app/db/database.dart';
 import 'package:app/model/todo_model.dart';
+import 'package:app/repository/todo_repository.dart';
+import 'package:drift/drift.dart';
 
 class TodoBloc {
   // 싱글턴 패턴(singleton pattern)
@@ -21,9 +23,35 @@ class TodoBloc {
   final _todoListController = StreamController<List<Todo>>();
   Stream<List<Todo>> get todoListStream => _todoListController.stream;
 
-  void getTimeWithDate(String date) {
+  final TodoRepository _todoRepository = TodoRepositoryImpl(AppDatabase());
+
+  void getTimeWithDate(date) async {
     // 마지막에 toList를 해줘야지 list를 뽑아낼 수 있다.
-    final todos = DUMMY_DATA.where((e) => e.date == date).toList();
+    final todos = await _todoRepository.getTodos(date: date);
     _todoListController.sink.add(todos);
+  }
+
+  void addTodo(
+      {required title,
+      contnet,
+      required date,
+      required TodoStatus status}) async {
+    final item = TodoItemsCompanion.insert(
+        title: title,
+        status: status.name,
+        date: date,
+        content: Value(contnet),
+        createdAt: Value(DateTime.now()));
+    await _todoRepository.addNewTodo(item);
+    getTimeWithDate(date);
+  }
+
+  void removeTodo(Todo todo) {
+    _todoRepository.deleteTodoById(todo.id);
+    getTimeWithDate(todo.date);
+  }
+
+  void dispose() {
+    _todoListController.close();
   }
 }
